@@ -1,0 +1,19 @@
+{
+  "name": "particles",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^2.8.0"
+  },
+  "dependencies": {
+    "eslint": "7",
+    "eslint-config-prettier": "^8.5.0",
+    "lil-gui": "^0.16.1",
+    "three": "^0.139.2"
+  }
+}
