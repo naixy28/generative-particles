@@ -1,9 +1,10 @@
 import '../style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { FlyControls } from 'three/examples/jsm/controls/FlyControls'
 import * as dat from 'lil-gui'
-import waterVertexShader from './shaders/water/vertex.glsl?raw'
-import waterFragmentShader from './shaders/water/fragment.glsl?raw'
+import vertexShader from './shaders/fbm/vertex.glsl?raw'
+import fragmentShader from './shaders/fbm/fragment.glsl?raw'
 
 /**
  * Base
@@ -29,8 +30,8 @@ debugObject.surfaceColor = '#8ab4c7'
 
 // Material
 const waterMaterial = new THREE.ShaderMaterial({
-  vertexShader: waterVertexShader,
-  fragmentShader: waterFragmentShader,
+  vertexShader: vertexShader,
+  fragmentShader: fragmentShader,
   uniforms: {
     uTime: { value: 0 },
 
@@ -57,32 +58,6 @@ const waterMaterial = new THREE.ShaderMaterial({
     uColorMultiplier: { value: 5 },
   },
 })
-
-gui.add(waterMaterial.uniforms.uBigWavesElevation, 'value').min(0).max(1).step(0.001).name('uBigWavesElevation')
-gui.add(waterMaterial.uniforms.uBigWavesFrequency.value, 'x').min(0).max(10).step(0.001).name('uBigWavesFrequencyX')
-gui.add(waterMaterial.uniforms.uBigWavesFrequency.value, 'y').min(0).max(10).step(0.001).name('uBigWavesFrequencyY')
-gui.add(waterMaterial.uniforms.uBigWavesSpeed, 'value').min(0).max(4).step(0.001).name('uBigWavesSpeed')
-
-gui.add(waterMaterial.uniforms.uSmallWavesElevation, 'value').min(0).max(1).step(0.001).name('uSmallWavesElevation')
-gui.add(waterMaterial.uniforms.uSmallWavesFrequency, 'value').min(0).max(30).step(0.01).name('uSmallWavesFrequency')
-gui.add(waterMaterial.uniforms.uSmallWavesSpeed, 'value').min(0).max(4).step(0.001).name('uSmallWavesSpeed')
-gui.add(waterMaterial.uniforms.uSmallWavesIterations, 'value').min(1).max(6).step(1).name('uSmallWavesIterations')
-
-gui
-  .addColor(debugObject, 'depthColor')
-  .name('depthColor')
-  .onChange(() => {
-    waterMaterial.uniforms.uDepthColor.value.set(debugObject.depthColor)
-  })
-gui
-  .addColor(debugObject, 'surfaceColor')
-  .name('surfaceColor')
-  .onChange(() => {
-    waterMaterial.uniforms.uSurfaceColor.value.set(debugObject.surfaceColor)
-  })
-
-gui.add(waterMaterial.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('uColorOffset')
-gui.add(waterMaterial.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('uColorMultiplier')
 
 // Mesh
 const water = new THREE.Mesh(waterGeometry, waterMaterial)
@@ -116,12 +91,18 @@ window.addEventListener('resize', () => {
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.set(1, 1, 1)
+camera.position.set(0.8, 0.8, 0.4)
+camera.lookAt(0.2, 0.1, 0)
 scene.add(camera)
 
 // Controls
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
+// const controls = new OrbitControls(camera, canvas)
+// controls.enableDamping = true
+const controls = new FlyControls(camera, canvas)
+controls.movementSpeed = 10
+controls.rollSpeed = Math.PI / 10
+controls.autoForward = false
+controls.dragToLook = true
 
 /**
  * Renderer
@@ -137,19 +118,35 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  */
 const clock = new THREE.Clock()
 
+const cameraPisition = document.querySelector('#position')
+const cameraLookAt = document.querySelector('#look-at')
+let cameraDirection = new THREE.Vector3()
+
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
 
-  waterMaterial.uniforms.uTime.value = elapsedTime
+  // waterMaterial.uniforms.uTime.value = elapsedTime
 
   // Update controls
-  controls.update()
+  controls.update(0.01)
 
   // Render
   renderer.render(scene, camera)
 
   // Call tick again on the next frame
   window.requestAnimationFrame(tick)
+
+  camera.getWorldDirection(cameraDirection)
+  cameraPisition.innerHTML = `Position: (${camera.position.x.toFixed(1)}, ${camera.position.y.toFixed(
+    1
+  )}, ${camera.position.z.toFixed(1)})`
+  cameraLookAt.innerHTML = `LookAt: (${(camera.position.x + cameraDirection.x).toFixed(1)}, ${(
+    camera.position.y + cameraDirection.y
+  ).toFixed(1)}, ${(camera.position.z + cameraDirection.z).toFixed(1)})`
 }
+
+gui.add(camera.position, 'x').min(0).max(10).step(0.01).name('camera.x')
+gui.add(camera.position, 'y').min(0).max(10).step(0.01).name('camera.y')
+gui.add(camera.position, 'z').min(0).max(10).step(0.01).name('camera.z')
 
 tick()
