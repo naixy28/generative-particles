@@ -11,10 +11,11 @@ export const fbm = (x, z) => {
   let g = 0.5
   let f = 2
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 20; i++) {
     y += w * noise2D(x * f, z * f)
     w *= g
     f *= f
   }
-  return y
+  // return y
+  return Math.pow(Math.abs(y * 0.8), 3)
 }

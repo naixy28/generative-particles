@@ -8,22 +8,24 @@ import * as createCamera from 'perspective-camera'
 const sizes = {
   width: 0,
   height: 0,
+  pixelWidth: 0,
+  pixelHeight: 0,
 }
 
 const fillNoise = (context, camera) => {
   console.log('fillNoise')
-  const points = fill(sizes.width, sizes.height)
+  const points = fill(sizes.pixelWidth, sizes.pixelHeight)
 
   context.fillStyle = '#666'
-  context.scale(1, -1)
-  context.translate(0, -sizes.height)
+  context.scale(-1, -1)
+  context.translate(-sizes.pixelWidth, -sizes.pixelHeight)
   let strength = 0
-  const multiplier = 0.002
+  const multiplier = 0.003
   for (let i = 0; i < points.length; i++) {
     strength = fbm(points[i][0] * multiplier, points[i][1] * multiplier)
-    strength += 1
-    strength *= 120
-    strength = ~~strength
+    // strength += 1
+    strength *= 70
+    // strength = ~~strength
 
     const projectedPoint = camera.project([points[i][0], strength, points[i][1]])
 
@@ -38,26 +40,26 @@ const resetCanvas = (el) => {
   sizes.width = window.innerWidth
   sizes.height = window.innerHeight
 
-  const pixelRatio = window.devicePixelRatio ?? 2
+  const pixelRatio = 1
   el.style.width = `${sizes.width}px`
   el.style.height = `${sizes.height}px`
-  el.width = sizes.width * pixelRatio
-  el.height = sizes.height * pixelRatio
+  sizes.pixelWidth = el.width = sizes.width * pixelRatio
+  sizes.pixelHeight = el.height = sizes.height * pixelRatio
 }
 
 const setupCamera = () => {
   const camera = createCamera({
-    fov: Math.PI / 3,
+    fov: Math.PI / 5,
     near: 0.1,
     far: 1000,
-    viewport: [0, 0, sizes.width, sizes.height],
+    viewport: [0, 0, sizes.pixelWidth, sizes.pixelHeight],
   })
 
   camera.identity()
 
-  camera.translate([~~(sizes.width / 2), 1000, 1500])
-  // camera.lookAt([sizes.width / 2, 50, sizes.height])
-  camera.lookAt([~~(sizes.width / 2), 10, ~~(sizes.height / 2)])
+  camera.translate([~~(sizes.pixelWidth / 2), 1000, 100])
+  camera.lookAt([sizes.pixelWidth / 2, sizes.pixelWidth / 50, sizes.pixelHeight / 2])
+  // camera.lookAt([~~(0 / 2), 0, ~~(0 / 2)])
   camera.update()
 
   return camera

@@ -4,8 +4,8 @@ export const fill = (width, height) => {
   const pds = new PoissonDiskSampling({
     shape: [width, height],
     minDistance: 3,
-    maxDistance: 5,
-    tries: 15,
+    maxDistance: 4,
+    tries: 30,
     // distanceFunction(point) {
 
     // }
