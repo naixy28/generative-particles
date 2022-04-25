@@ -94,6 +94,13 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+const rtTexture = new THREE.WebGLRenderTarget(sizes.width, sizes.height, {
+  minFilter: THREE.LinearFilter,
+  magFilter: THREE.NearestFilter,
+  format: THREE.RGBAFormat,
+  type: THREE.FloatType,
+})
+
 /**
  * Animate
  */
@@ -117,7 +124,7 @@ const tick = () => {
   renderer.render(scene, camera)
 
   // Call tick again on the next frame
-  window.requestAnimationFrame(tick)
+  // window.requestAnimationFrame(tick)
 
   camera.getWorldDirection(cameraDirection)
   cameraPisition.innerHTML = `Position: (${camera.position.x.toFixed(1)}, ${camera.position.y.toFixed(
