@@ -1,8 +1,10 @@
 
 uniform float uTime;
 attribute float elevation;
+varying vec3 vNormal;
 varying vec2 vUv;
 varying float vElevation;
+varying vec3 vVertexPosition;
 
 // Classic Perlin 3D Noise 
 // by Stefan Gustavson
@@ -89,34 +91,48 @@ float cnoise(vec3 P)
     return 2.2 * n_xyz;
 }
 
-void main () {
-  vec4 modelPosition = modelMatrix * vec4(position, 1.0); 
-
-  float elevation = 0.; 
+float fbm(vec4 p) {
+  float elevation = 0.;
   float w = 0.5;
   float f = 2.0;
-  for (int i = 0; i < 20; i++) {
-    elevation += (cnoise(vec3(modelPosition.xz* f, uTime * 0.1)) + 1.) * w; 
+  for (int i = 0; i < 15; i++) {
+    elevation += (cnoise(vec3(p.xz * f, 0.)) + 1.) * w; 
     w *= 0.5;
     f *= 2.0;
   } 
-  elevation = pow(elevation * 2., 2.) / 10.;
-  // elevation += 0.3;
+  elevation = pow(elevation * 1.2, 2.) / 7.;
 
-  // float elevation = sin(modelPosition.x * uBigWavesFrequency.x + uTime * uBigWavesSpeed) * 
-  //                   sin(modelPosition.z * uBigWavesFrequency.y + uTime * uBigWavesSpeed) * 
-  //                   uBigWavesElevation;
+  return elevation;
+}
 
-  // for (float i = 1.; i < uSmallWavesIterations; i++) {
-  //   elevation -= abs(cnoise(vec3((modelPosition.xz * uSmallWavesFrequency * i), uTime * uSmallWavesSpeed)) * uSmallWavesElevation / i);
-  // }
+vec4 displace(vec4 pos, float elevation) {
+  return pos + vec4(0., elevation, 0., 0.);
+}
 
+float offset = 2. / 512.;
+
+void main () {
+  vec4 modelPosition = modelMatrix * vec4(position, 1.0); 
+  vec4 neighbour1 = modelPosition + vec4(offset, 0., 0., 0.);
+  vec4 neighbour2 = modelPosition + vec4(0., 0., offset, 0.);
+
+  float elevation = fbm(modelPosition);
+  vec4 displacedPosition = displace(modelPosition, elevation);
+
+  vec4 displacedNeighbour1 = displace(neighbour1, fbm(neighbour1));
+  vec4 displacedNeighbour2 = displace(neighbour2, fbm(neighbour2));
   
-  modelPosition.y += elevation;
-  vec4 viewPosition = viewMatrix * modelPosition;
+  vec3 tangent = normalize(displacedNeighbour1.xyz - displacedPosition.xyz);
+  vec3 bitangent = normalize(displacedNeighbour2.xyz - displacedPosition.xyz);
+  vec3 normal = normalize(cross(tangent, bitangent));
+
+
+  vec4 viewPosition = viewMatrix * displacedPosition;
   vec4 projectedPosition = projectionMatrix * viewPosition;
   gl_Position = projectedPosition;
 
   vUv = uv;
+  vVertexPosition = displacedPosition.xyz;
   vElevation = elevation;
+  vNormal = normal;
 }

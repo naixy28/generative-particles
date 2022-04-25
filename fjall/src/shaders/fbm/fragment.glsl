@@ -1,14 +1,17 @@
-// uniform vec3 uDepthColor;
-// uniform vec3 uSurfaceColor;
-// uniform float uColorOffset;
-// uniform float  uColorMultiplier;
+uniform vec3 uLightPosition;
 
+varying vec3 vNormal;
 varying float vElevation;
 varying vec2 vUv;
+varying vec3 vVertexPosition;
 
 void main () {
-  // float mixStrength = (vElevation + uColorOffset) * uColorMultiplier;
-  // vec3 color = mix(uDepthColor, uSurfaceColor, mixStrength);
 
-  gl_FragColor = vec4(vElevation, vElevation,  vElevation, 1.0);
+  vec3 toLight = normalize(uLightPosition - vVertexPosition);
+
+  float cosAngle = dot(vNormal, toLight);
+  float lightStrength = clamp(cosAngle, 0.0, 1.0);
+
+
+  gl_FragColor = vec4(vElevation, lightStrength,  0., 1.0);
 } 

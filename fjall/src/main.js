@@ -14,7 +14,7 @@ const gui = new dat.GUI({ width: 340 })
 const debugObject = {}
 
 // Canvas
-const canvas = document.querySelector('canvas.webgl')
+const canvas = document.querySelector('.webgl')
 
 // Scene
 const scene = new THREE.Scene()
@@ -34,28 +34,7 @@ const waterMaterial = new THREE.ShaderMaterial({
   fragmentShader: fragmentShader,
   uniforms: {
     uTime: { value: 0 },
-
-    uBigWavesElevation: { value: 0.2 },
-    uBigWavesFrequency: {
-      value: new THREE.Vector2(4, 1.5),
-    },
-    uBigWavesSpeed: {
-      value: 0.5,
-    },
-
-    uSmallWavesElevation: { value: 0.15 },
-    uSmallWavesFrequency: { value: 3 },
-    uSmallWavesSpeed: { value: 0.2 },
-    uSmallWavesIterations: { value: 4 },
-
-    uDepthColor: {
-      value: new THREE.Color(debugObject.depthColor),
-    },
-    uSurfaceColor: {
-      value: new THREE.Color(debugObject.surfaceColor),
-    },
-    uColorOffset: { value: 0.08 },
-    uColorMultiplier: { value: 5 },
+    uLightPosition: { value: new THREE.Vector3(-1.3, 1, -1.1) },
   },
 })
 
@@ -63,6 +42,8 @@ const waterMaterial = new THREE.ShaderMaterial({
 const water = new THREE.Mesh(waterGeometry, waterMaterial)
 water.rotation.x = -Math.PI * 0.5
 scene.add(water)
+
+console.log(waterGeometry)
 
 /**
  * Sizes
@@ -96,13 +77,13 @@ camera.lookAt(0.2, 0.1, 0)
 scene.add(camera)
 
 // Controls
-// const controls = new OrbitControls(camera, canvas)
-// controls.enableDamping = true
-const controls = new FlyControls(camera, canvas)
-controls.movementSpeed = 10
-controls.rollSpeed = Math.PI / 10
-controls.autoForward = false
-controls.dragToLook = true
+const controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true
+// const controls = new FlyControls(camera, canvas)
+// controls.movementSpeed = 10
+// controls.rollSpeed = Math.PI / 10
+// controls.autoForward = false
+// controls.dragToLook = true
 
 /**
  * Renderer
@@ -125,10 +106,12 @@ let cameraDirection = new THREE.Vector3()
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
 
-  // waterMaterial.uniforms.uTime.value = elapsedTime
+  waterMaterial.uniforms.uTime.value = elapsedTime
+  // water.rotation.z += 0.001
 
   // Update controls
-  controls.update(0.01)
+  controls.update()
+  // controls.update(0.01)
 
   // Render
   renderer.render(scene, camera)
@@ -148,5 +131,8 @@ const tick = () => {
 gui.add(camera.position, 'x').min(0).max(10).step(0.01).name('camera.x')
 gui.add(camera.position, 'y').min(0).max(10).step(0.01).name('camera.y')
 gui.add(camera.position, 'z').min(0).max(10).step(0.01).name('camera.z')
+gui.add(waterMaterial.uniforms.uLightPosition.value, 'x').min(-5).max(5).step(0.01).name('uLightPositionX')
+gui.add(waterMaterial.uniforms.uLightPosition.value, 'y').min(-5).max(5).step(0.01).name('uLightPositionY')
+gui.add(waterMaterial.uniforms.uLightPosition.value, 'z').min(-5).max(5).step(0.01).name('uLightPositionZ')
 
 tick()
