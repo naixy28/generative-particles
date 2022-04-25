@@ -26,7 +26,7 @@ const scene = new THREE.Scene()
  * Water
  */
 // Geometry
-const waterGeometry = new THREE.PlaneGeometry(2, 2, 512, 512)
+const waterGeometry = new THREE.PlaneGeometry(4, 4, 1024, 1024)
 
 debugObject.depthColor = '#255f83'
 debugObject.surfaceColor = '#8ab4c7'
@@ -37,7 +37,7 @@ const waterMaterial = new THREE.ShaderMaterial({
   fragmentShader: fragmentShader,
   uniforms: {
     uTime: { value: 0 },
-    uLightPosition: { value: new THREE.Vector3(-1.3, 1, -1.1) },
+    uLightPosition: { value: new THREE.Vector3(-3.8, 0.85, 2.24) },
   },
 })
 
@@ -74,14 +74,17 @@ window.addEventListener('resize', () => {
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.set(-0.3, 0.4, 1.1)
-camera.lookAt(0.0, 0.1, 0.2)
+// const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 100)
+camera.position.set(0.9, 0.3, 0.0)
+// camera.position.set(0.8, 0.7, 0.4)
+camera.lookAt(0.0, 0.0, 0)
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
+
 // const controls = new FlyControls(camera, canvas)
 // controls.movementSpeed = 10
 // controls.rollSpeed = Math.PI / 10

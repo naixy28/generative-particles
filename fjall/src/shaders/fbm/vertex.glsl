@@ -106,6 +106,23 @@ float fbm(vec4 p) {
   return elevation;
 }
 
+float fbm2(vec4 x) {
+	float v = 0.0;
+	float a = 0.5;
+	vec2 shift = vec2(100);
+	// Rotate to reduce axial bias
+  mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.50));
+	for (int i = 0; i < 15; ++i) {
+		v += a * cnoise(vec3(x.xz * 2., 0.));
+		x.xz = rot * x.xz * 2.0 + shift;
+		a *= 0.5;
+	}
+
+  return abs(pow(v * 1.6, 3.)) * 1.2 + 0.2;
+	// return v + 0.2;
+}
+
+
 vec4 displace(vec4 pos, float elevation) {
   return pos + vec4(0., elevation, 0., 0.);
 }
@@ -117,11 +134,11 @@ void main () {
   vec4 neighbour1 = modelPosition + vec4(offset, 0., 0., 0.);
   vec4 neighbour2 = modelPosition + vec4(0., 0., offset, 0.);
 
-  float elevation = fbm(modelPosition);
+  float elevation = fbm2(modelPosition);
   vec4 displacedPosition = displace(modelPosition, elevation);
 
-  vec4 displacedNeighbour1 = displace(neighbour1, fbm(neighbour1));
-  vec4 displacedNeighbour2 = displace(neighbour2, fbm(neighbour2));
+  vec4 displacedNeighbour1 = displace(neighbour1, fbm2(neighbour1));
+  vec4 displacedNeighbour2 = displace(neighbour2, fbm2(neighbour2));
   
   vec3 tangent = normalize(displacedNeighbour1.xyz - displacedPosition.xyz);
   vec3 bitangent = normalize(displacedNeighbour2.xyz - displacedPosition.xyz);
