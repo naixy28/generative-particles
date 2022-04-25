@@ -5,6 +5,8 @@ import { FlyControls } from 'three/examples/jsm/controls/FlyControls'
 import * as dat from 'lil-gui'
 import vertexShader from './shaders/fbm/vertex.glsl?raw'
 import fragmentShader from './shaders/fbm/fragment.glsl?raw'
+import { fill } from './utils/sampling'
+import { fillCircle } from './utils/fill'
 
 /**
  * Base
@@ -15,6 +17,7 @@ const debugObject = {}
 
 // Canvas
 const canvas = document.querySelector('.webgl')
+const samplingCanvas = document.querySelector('.sampling')
 
 // Scene
 const scene = new THREE.Scene()
@@ -72,8 +75,8 @@ window.addEventListener('resize', () => {
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.set(0.8, 0.8, 0.4)
-camera.lookAt(0.2, 0.1, 0)
+camera.position.set(-0.3, 0.4, 1.1)
+camera.lookAt(0.0, 0.1, 0.2)
 scene.add(camera)
 
 // Controls
@@ -94,6 +97,9 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+samplingCanvas.width = sizes.width
+samplingCanvas.height = sizes.height
+
 const rtTexture = new THREE.WebGLRenderTarget(sizes.width, sizes.height, {
   minFilter: THREE.LinearFilter,
   magFilter: THREE.NearestFilter,
@@ -110,6 +116,36 @@ const cameraPisition = document.querySelector('#position')
 const cameraLookAt = document.querySelector('#look-at')
 let cameraDirection = new THREE.Vector3()
 
+/**
+ * Sampling
+ */
+const paint = () => {
+  const points = fill(sizes.width, sizes.height)
+  const context = samplingCanvas.getContext('2d')
+  context.fillStyle = '#fadcaf'
+  context.fillRect(0, 0, sizes.width, sizes.height)
+
+  context.scale(1, -1)
+  context.translate(0, -sizes.height)
+
+  const pixels = new Float32Array(sizes.width * sizes.height * 4)
+  let index
+  let height
+  let lightStrength
+  renderer.readRenderTargetPixels(rtTexture, 0, 0, sizes.width, sizes.height, pixels)
+
+  for (let i = 0; i < points.length; i++) {
+    index = ~~points[i][1] * sizes.width + ~~points[i][0]
+    height = pixels[index * 4]
+
+    lightStrength = pixels[index * 4 + 1]
+
+    fillCircle(context, points[i][0], points[i][1], height, lightStrength)
+  }
+
+  // console.log(pixels)
+}
+
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
 
@@ -121,8 +157,15 @@ const tick = () => {
   // controls.update(0.01)
 
   // Render
+  renderer.setRenderTarget(rtTexture)
   renderer.render(scene, camera)
 
+  renderer.setRenderTarget(null)
+  renderer.render(scene, camera)
+
+  // sampling
+
+  paint()
   // Call tick again on the next frame
   // window.requestAnimationFrame(tick)
 

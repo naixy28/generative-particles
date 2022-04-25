@@ -1,23 +1,27 @@
 lockfileVersion: 5.3
 
 specifiers:
+  chroma-js: ^2.4.2
   eslint: '7'
   eslint-config-prettier: ^8.5.0
   gl-matrix: ^3.4.3
   lil-gui: ^0.16.1
   perspective-camera: ^2.0.1
   poisson-disk-sampling: ^2.2.3
+  popmotion: ^11.0.3
   simplex-noise: ^3.0.1
   three: ^0.139.2
   vite: ^2.8.0
 
 dependencies:
+  chroma-js: registry.npmmirror.com/chroma-js/2.4.2
   eslint: registry.npmmirror.com/eslint/7.32.0
   eslint-config-prettier: registry.npmmirror.com/eslint-config-prettier/8.5.0_eslint@7.32.0
   gl-matrix: registry.npmmirror.com/gl-matrix/3.4.3
   lil-gui: registry.npmmirror.com/lil-gui/0.16.1
   perspective-camera: registry.npmmirror.com/perspective-camera/2.0.1
   poisson-disk-sampling: registry.npmmirror.com/poisson-disk-sampling/2.2.3
+  popmotion: registry.npmmirror.com/popmotion/11.0.3
   simplex-noise: registry.npmmirror.com/simplex-noise/3.0.1
   three: registry.npmmirror.com/three/0.139.2
 
@@ -242,6 +246,12 @@ packages:
     dependencies:
       ansi-styles: registry.npmmirror.com/ansi-styles/4.3.0
       supports-color: registry.npmmirror.com/supports-color/7.2.0
+    dev: false
+
+  registry.npmmirror.com/chroma-js/2.4.2:
+    resolution: {integrity: sha512-U9eDw6+wt7V8z5NncY2jJfZa+hUH8XEj8FQHgFJTrUFnJfXYf4Ml4adI2vXZOjqRDpFWtYVWypDfZwnJ+HIR4A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/chroma-js/-/chroma-js-2.4.2.tgz}
+    name: chroma-js
+    version: 2.4.2
     dev: false
 
   registry.npmmirror.com/color-convert/1.9.3:
@@ -801,6 +811,14 @@ packages:
     version: 3.2.5
     dev: false
 
+  registry.npmmirror.com/framesync/6.0.1:
+    resolution: {integrity: sha512-fUY88kXvGiIItgNC7wcTOl0SNRCVXMKSWW2Yzfmn7EKNc+MpCzcz9DhdHcdjbrtN3c6R4H5dTY2jiCpPdysEjA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/framesync/-/framesync-6.0.1.tgz}
+    name: framesync
+    version: 6.0.1
+    dependencies:
+      tslib: registry.npmmirror.com/tslib/2.4.0
+    dev: false
+
   registry.npmmirror.com/fs.realpath/1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fs.realpath/-/fs.realpath-1.0.0.tgz}
     name: fs.realpath
@@ -906,6 +924,12 @@ packages:
     dependencies:
       function-bind: registry.npmmirror.com/function-bind/1.1.1
     dev: true
+
+  registry.npmmirror.com/hey-listen/1.0.8:
+    resolution: {integrity: sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hey-listen/-/hey-listen-1.0.8.tgz}
+    name: hey-listen
+    version: 1.0.8
+    dev: false
 
   registry.npmmirror.com/ignore/4.0.6:
     resolution: {integrity: sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ignore/-/ignore-4.0.6.tgz}
@@ -1175,6 +1199,17 @@ packages:
       moore: registry.npmmirror.com/moore/1.0.0
     dev: false
 
+  registry.npmmirror.com/popmotion/11.0.3:
+    resolution: {integrity: sha512-Y55FLdj3UxkR7Vl3s7Qr4e9m0onSnP8W7d/xQLsoJM40vs6UKHFdygs6SWryasTZYqugMjm3BepCF4CWXDiHgA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/popmotion/-/popmotion-11.0.3.tgz}
+    name: popmotion
+    version: 11.0.3
+    dependencies:
+      framesync: registry.npmmirror.com/framesync/6.0.1
+      hey-listen: registry.npmmirror.com/hey-listen/1.0.8
+      style-value-types: registry.npmmirror.com/style-value-types/5.0.0
+      tslib: registry.npmmirror.com/tslib/2.4.0
+    dev: false
+
   registry.npmmirror.com/postcss/8.4.12:
     resolution: {integrity: sha512-lg6eITwYe9v6Hr5CncVbK70SoioNQIq81nsaG86ev5hAidQvmOeETBqs7jm43K2F5/Ley3ytDtriImV6TpNiSg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/postcss/-/postcss-8.4.12.tgz}
     name: postcss
@@ -1383,6 +1418,15 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
+  registry.npmmirror.com/style-value-types/5.0.0:
+    resolution: {integrity: sha512-08yq36Ikn4kx4YU6RD7jWEv27v4V+PUsOGa4n/as8Et3CuODMJQ00ENeAVXAeydX4Z2j1XHZF1K2sX4mGl18fA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/style-value-types/-/style-value-types-5.0.0.tgz}
+    name: style-value-types
+    version: 5.0.0
+    dependencies:
+      hey-listen: registry.npmmirror.com/hey-listen/1.0.8
+      tslib: registry.npmmirror.com/tslib/2.4.0
+    dev: false
+
   registry.npmmirror.com/supports-color/5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/supports-color/-/supports-color-5.5.0.tgz}
     name: supports-color
@@ -1431,6 +1475,12 @@ packages:
     resolution: {integrity: sha512-gV7q7QY8rogu7HLFZR9cWnOQAUedUhu2WXAnpr2kdXZP9YDKsG/0ychwQvWkZN5PlNw9mv5MoCTin6zNTXoONg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/three/-/three-0.139.2.tgz}
     name: three
     version: 0.139.2
+    dev: false
+
+  registry.npmmirror.com/tslib/2.4.0:
+    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/tslib/-/tslib-2.4.0.tgz}
+    name: tslib
+    version: 2.4.0
     dev: false
 
   registry.npmmirror.com/type-check/0.4.0:

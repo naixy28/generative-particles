@@ -95,6 +95,7 @@ float fbm(vec4 p) {
   float elevation = 0.;
   float w = 0.5;
   float f = 2.0;
+
   for (int i = 0; i < 15; i++) {
     elevation += (cnoise(vec3(p.xz * f, 0.)) + 1.) * w; 
     w *= 0.5;
